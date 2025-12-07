@@ -5,17 +5,32 @@
 }
 
 :host.is-mine {
-  grid-template-columns: max-content 32px;
-  justify-self: end;
+  display: grid;
+  grid-template-columns: 1fr 32px;
+  justify-self: self-end;
+  grid-gap: 12px;
 
   .message-container {
     order: -1;
+    text-align: -webkit-right;
+    justify-self: end;
   }
 
   .message-text {
     background: var(--primary-color);
     color: var(--dark-color);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+    width: fit-content;
+    text-align: left;
   }
+  .user-chat-name {
+    order: 1;
+  }
+}
+
+.message-and-time {
+  display: flex;
+  gap: 4px;
 }
 
 .message-text {
@@ -23,9 +38,8 @@
   background: var(--message-color);
   font-weight: 500;
   color: var(--light-color);
-  width: max-content;
-  mask: linear-gradient(#000 0 0),
-    linear-gradient(135deg, #000 50%, #0000 0) border-box 100% 100% / 200% 200% no-repeat;
-  mask-composite: exclude;
-  mask-position: 129% 1%;
+  max-width: 100%;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  word-break: break-word;
+  width: fit-content;
 }

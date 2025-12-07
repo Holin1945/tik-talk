@@ -45,3 +45,12 @@
   display: grid;
   grid-gap: 8px;
 }
+
+.post__comment-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.post__comment-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+}
+

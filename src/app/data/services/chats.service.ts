@@ -1,8 +1,8 @@
-import { Chat, LastMessageRes, Message } from './../interfaces/chats.interface';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
+import { map, switchMap, timer } from 'rxjs';
+import { Chat, LastMessageRes, Message } from './../interfaces/chats.interface';
 import { ProfileService } from './profile.service';
-import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ChatsService {
@@ -29,13 +29,13 @@ export class ChatsService {
         const patchedMessages = chat.messages.map((message) => {
           return {
             ...message,
+
             user: chat.userFirst.id === message.userFromId ? chat.userFirst : chat.userSecond,
             isMine: message.userFromId === this.me()!.id,
           };
         });
-
         this.activeChatMessages.set(patchedMessages);
-        
+
         return {
           ...chat,
           companion: chat.userFirst.id === this.me()!.id ? chat.userSecond : chat.userFirst,
@@ -54,6 +54,12 @@ export class ChatsService {
           message,
         },
       }
+    );
+  }
+
+  unreadChats(intervalMs = 1115000) {
+    return timer(0, intervalMs).pipe(
+      switchMap(() => this.httt.get<LastMessageRes[]>(`${this.chatsUrl}get_my_chats/`))
     );
   }
 }

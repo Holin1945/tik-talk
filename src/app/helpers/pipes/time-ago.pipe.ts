@@ -2,10 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({ name: 'timeAgo', standalone: true })
 export class TimeAgoPipe implements PipeTransform {
-
   transform(value: string | Date | null | undefined): string {
     if (!value) return '';
-    // Обрезаем дробные секунды и добавляем Z, если нет таймзоны
+    
     const str = value.toString().replace(/\.\d+/, '') + (value.toString().endsWith('Z') ? '' : 'Z');
     const date = new Date(str);
     const diff = Math.floor((Date.now() - date.getTime()) / 1000);
@@ -21,7 +20,8 @@ export class TimeAgoPipe implements PipeTransform {
 
     const d = Math.floor(h / 24);
     if (d === 1) return 'вчера';
-    if (d < 7) return `${d} день${d === 1 ? '' : 'ей'} назад`;
+    if (d <= 4) return `${d} дн${d === 1 ? '' : 'я'} назад`;
+    if (d <= 6) return `${d} дн${d === 1 ? '' : 'ей'}`;
 
     const w = Math.floor(d / 7);
     if (w < 5) return `${w} недел${w === 1 ? 'я' : 'ь'} назад`;

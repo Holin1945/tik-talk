@@ -1,13 +1,21 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { AvatarCircleComponent } from '../../../common-ui/avatar-cirlce/avatar-cirlce.component';
-import { LastMessageRes } from '../../../data/interfaces/chats.interface';
+import { Chat, LastMessageRes, Message } from '../../../data/interfaces/chats.interface';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'button[chats]',
-  imports: [AvatarCircleComponent],
+  imports: [AvatarCircleComponent, DatePipe],
   templateUrl: './chats-btn.component.html',
   styleUrl: './chats-btn.component.scss',
 })
 export class ChatsBtnComponent {
-  chat = input<LastMessageRes>()
+  message = input<Message>();
+  comments = signal<Chat[]>([]);
+  chat = input<LastMessageRes>();
+
+  textWrap(text: string, max: number = 30): string {
+    if (!text) return '';
+    return text.length > max ? text.slice(0, max) + '...' : text;
+  }
 }

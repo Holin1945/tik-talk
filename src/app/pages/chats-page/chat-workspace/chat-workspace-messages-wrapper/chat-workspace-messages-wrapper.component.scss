@@ -1,10 +1,37 @@
 :host {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 16px 20px;
-  grid-template-rows: 1fr min-content;
+  height: 775px;
+  gap: 16px;
+  max-width: 712px;
 }
 
 .messages-wrapper {
   display: grid;
-  grid-gap: 12px; 
+  grid-gap: 12px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.date-position {
+  place-content: center;
+  justify-self: center;
+  background: var(--dark-active-color);
+  width: 113.33px;
+  height: 28.17px;
+  color: var(--light-color);
+  align-items: center;
+  gap: 32px;
+  margin: 32px 0;
+  text-align: center;
+}
+
+.messages-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.messages-wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
 }

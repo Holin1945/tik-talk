@@ -1,7 +1,13 @@
-<div class="messages-wrapper">
-@for (message of messages(); track message.id) {
+<div #scrollMe class="messages-wrapper">
+  @for (group of getGroupedMessages(); track group.label) {
+  <div class="date-position tt-control-label">{{ group.label }}</div>
+
+  @for (message of group.messages; track message.id) {
   <app-chat-workspace-message [message]="message"></app-chat-workspace-message>
-}
+  } }
 </div>
 
-<app-message-input (created)="onSendMessage($event)"></app-message-input>
+<app-message-input
+  (created)="onSendMessage($event)"
+  (sendClick)="scrollToBottom()"
+></app-message-input>

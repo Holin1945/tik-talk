@@ -1,7 +1,7 @@
-import { Component, HostBinding, input } from '@angular/core';
-import { Message } from '../../../../../data/interfaces/chats.interface';
 import { CommonModule } from '@angular/common';
+import { Component, HostBinding, input } from '@angular/core';
 import { AvatarCircleComponent } from '../../../../../common-ui/avatar-cirlce/avatar-cirlce.component';
+import { Message } from '../../../../../data/interfaces/chats.interface';
 
 @Component({
   selector: 'app-chat-workspace-message',
