@@ -1,0 +1,81 @@
+:host {
+  position: relative;
+}
+
+.go-home {
+  background: var(--primary-color);
+  width: max-content;
+  height: 30px;
+  border: none;
+  border-radius: 5px;
+  position: absolute;
+  left: 10%;
+  font-size: 14px;
+  padding: 0 5px;
+}
+
+.container-form {
+  max-width: 600px;
+  height: 800px;
+  margin: 100px auto;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 3px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  margin-bottom: 20px;
+}
+
+.delivery-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.button-position-delivery {
+  display: flex;
+  justify-content: space-between;
+}
+
+.button-position-delivery-delete {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.button-delivery {
+  width: 50px;
+}
+
+.additional-services {
+  display: grid;
+  grid-gap: 16px;
+}
+
+.tt-input.ng-invalid.ng-touched {
+  border: 2px solid tomato;
+}
+
+.tt-input.ng-invalid.ng-touched + .validation {
+  display: block;
+}
+
+.two-colums {
+  display: grid;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
+}
+
+.tt-input::-webkit-calendar-picker-indicator {
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+.tt-input.ng-pending {
+  border: 2px dashed var(--primary-color);
+}

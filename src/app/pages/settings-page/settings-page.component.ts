@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { ProfileHeaderComponent } from '../../common-ui/profile-header/profile-header.component';
 import { ProfileService } from '../../data/services/profile.service';
 import { AvatarUploadComponent } from './avatar-upload/avatar-upload.component';
+import { RouterLinkWithHref } from "@angular/router";
 
 @Component({
   selector: 'app-settings-page',
@@ -15,7 +16,8 @@ import { AvatarUploadComponent } from './avatar-upload/avatar-upload.component';
     ProfileHeaderComponent,
     ReactiveFormsModule,
     AvatarUploadComponent,
-  ],
+    RouterLinkWithHref
+],
   templateUrl: './settings-page.component.html',
   styleUrl: './settings-page.component.scss',
 })
