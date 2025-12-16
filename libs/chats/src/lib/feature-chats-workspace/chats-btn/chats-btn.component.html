@@ -1,0 +1,15 @@
+@if(chat(); as chat;) {
+
+<app-avatar-circle class="size32" [avatarUrl]="chat.userFrom.avatarUrl"></app-avatar-circle>
+
+<div class="last-message__wrapper">
+  <div class="chat-user medium-text">
+    {{ chat.userFrom.firstName }} {{ chat.userFrom.lastName }}
+    <div>{{ chat.createdAt | date : 'dd.MM.yyyy' }}</div>
+  </div>
+  <div class="messages-and-count">
+    <div class="medium-text">{{ textWrap(chat.message ?? '...', 30) }}</div>
+    <div class="count-messages tt-control-label">{{ chat.unreadMessages }}</div>
+  </div>
+</div>
+}
