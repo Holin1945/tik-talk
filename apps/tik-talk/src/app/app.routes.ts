@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
-import { FormsExperimentComponent } from './experimental/forms-experiment/forms-experiment.component';
+import { provideEffects } from '@ngrx/effects';
+import { provideState } from '@ngrx/store';
 import { canActivateAuth, LoginPageComponent } from '@tt/auth';
 import { chatsRoutes } from '@tt/chats';
-import { ProfilePageComponent, SearchPageComponent, SettingsPageComponent } from '@tt/profile';
+import { ProfileEffects, profileFeature } from '@tt/data-access';
 import { LayoutComponent } from '@tt/layout';
+import { ProfilePageComponent, SearchPageComponent, SettingsPageComponent } from '@tt/profile';
+import { FormsExperimentComponent } from './experimental/forms-experiment/forms-experiment.component';
 
 export const routes: Routes = [
   {
@@ -13,7 +16,11 @@ export const routes: Routes = [
       { path: '', redirectTo: 'profile/me', pathMatch: 'full' },
       { path: 'profile/:id', component: ProfilePageComponent },
       { path: 'settings', component: SettingsPageComponent },
-      { path: 'search', component: SearchPageComponent },
+      {
+        path: 'search',
+        component: SearchPageComponent,
+        providers: [provideState(profileFeature), provideEffects(ProfileEffects)],
+      },
 
       {
         path: 'chats',
