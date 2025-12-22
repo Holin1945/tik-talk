@@ -1,17 +1,22 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
   HostListener,
   inject,
   input,
+  OnDestroy,
+  OnInit,
   Output,
   Renderer2,
 } from '@angular/core';
-import { debounceTime, firstValueFrom, fromEvent, Subject, takeUntil } from 'rxjs';
-import { PostComponent } from '../post/post.component';
+import { Store } from '@ngrx/store';
+import { GlobalStoreService, PostService } from '@tt/data-access';
+import { debounceTime, fromEvent, Subject, takeUntil } from 'rxjs';
+import { postsActions, selectPosts } from '../../data';
 import { PostInputComponent } from '../../ui';
-import { PostService, ProfileService } from '@tt/data-access';
+import { PostComponent } from '../post/post.component';
 
 @Component({
   selector: 'app-post-feed',
@@ -19,30 +24,29 @@ import { PostService, ProfileService } from '@tt/data-access';
   templateUrl: './post-feed.component.html',
   styleUrl: './post-feed.component.scss',
 })
-export class PostFeedComponent {
+export class PostFeedComponent implements OnDestroy, AfterViewInit, OnInit {
   postService = inject(PostService);
-  profile = inject(ProfileService).me;
-
-  r2 = inject(Renderer2);
   hostElement = inject<ElementRef<HTMLElement>>(ElementRef);
+  profile = inject(GlobalStoreService).me;
+  store = inject(Store);
+  r2 = inject(Renderer2);
 
   postId = input<number>(0);
   isCommentInput = input(false);
+  feed = this.store.selectSignal(selectPosts);
 
-  feed = this.postService.posts;
   postText = '';
-
-  @Output() created = new EventEmitter();
-
   private destroy$ = new Subject<void>();
 
-  constructor() {
-    firstValueFrom(this.postService.fetchPosts());
-  }
+  @Output() created = new EventEmitter();
 
   @HostListener('window:resize')
   onResize(): void {
     this.resizeFeed();
+  }
+
+  ngOnInit() {
+    this.store.dispatch(postsActions.fetchPosts({}));
   }
 
   ngAfterViewInit(): void {
@@ -69,19 +73,14 @@ export class PostFeedComponent {
   onCreatePost(postText: string) {
     if (!postText) return;
 
-    firstValueFrom(
-      this.postService.createPost({
-        title: 'Клевый пост',
-        content: postText,
-        authorId: this.profile()!.id,
+    this.store.dispatch(
+      postsActions.createPost({
+        payload: {
+          title: 'Клевый пост',
+          content: postText,
+          authorId: this.profile()?.id,
+        },
       })
-    )
-      .then(() => {
-        this.created.emit();
-      })
-      .catch((error) => {
-        console.error('Ошибка вывода поста', error);
-      });
-    return;
+    );
   }
 }

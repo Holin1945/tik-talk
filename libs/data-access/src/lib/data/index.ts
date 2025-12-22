@@ -9,7 +9,7 @@ import { ProfileService } from './services/profile.service';
 
 export * from './interfaces/chats.interface';
 export * from './interfaces/post.interface';
-export * from './store';
+// export * from './store';
 export { AuthService, ChatsService, GlobalStoreService, PostService, ProfileService };
 export type { Pageble, Profile, TokenResponse };
 

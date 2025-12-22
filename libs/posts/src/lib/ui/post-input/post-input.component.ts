@@ -19,8 +19,7 @@ import { GlobalStoreService } from '@tt/data-access';
   styleUrl: './post-input.component.scss',
 })
 export class PostInputComponent {
-  r2 = inject(Renderer2);
-  #globalStoreService = inject(GlobalStoreService);
+  r2 = inject(Renderer2); 
   profile = inject(GlobalStoreService).me;
   isCommentInput = input(false);
   postId = input<number>(0);

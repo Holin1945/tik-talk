@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { ProfileService } from '@tt/data-access';
 import { profileActions } from '../../data/store';
-import { debounceTime, startWith } from 'rxjs';
+import { debounceTime, startWith, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-profile-filters',
@@ -12,10 +11,11 @@ import { debounceTime, startWith } from 'rxjs';
   templateUrl: './profile-filters.component.html',
   styleUrl: './profile-filters.component.scss',
 })
-export class ProfileFiltersComponent {
+export class ProfileFiltersComponent implements OnInit, OnDestroy {
   fb = inject(FormBuilder);
-  profileService = inject(ProfileService);
   store = inject(Store);
+
+  searchFormSub!: Subscription;
 
   searchForm = this.fb.group({
     firstName: [''],
@@ -24,13 +24,21 @@ export class ProfileFiltersComponent {
   });
 
   constructor() {
-    this.searchForm.valueChanges
-      .pipe(
-        startWith({}),
-        debounceTime(300),
-        ).subscribe(formValue => {
-          this.store.dispatch(profileActions.filterEvents({filters: formValue}))
-        })
-        takeUntilDestroyed()
+    this.searchForm.valueChanges.pipe(startWith({}), debounceTime(300)).subscribe((formValue) => {
+      localStorage.setItem('profileFilters', JSON.stringify(formValue));
+      this.store.dispatch(profileActions.filterEvents({ filters: formValue }));
+    });
+    takeUntilDestroyed();
+  }
+
+  ngOnInit() {
+    const savedFilters = localStorage.getItem('profileFilters');
+    if (savedFilters) {
+      this.searchForm.setValue(JSON.parse(savedFilters));
+    }
+  }
+
+  ngOnDestroy() {
+    this.searchFormSub.unsubscribe();
   }
 }

@@ -3,9 +3,15 @@ import { provideEffects } from '@ngrx/effects';
 import { provideState } from '@ngrx/store';
 import { canActivateAuth, LoginPageComponent } from '@tt/auth';
 import { chatsRoutes } from '@tt/chats';
-import { ProfileEffects, profileFeature } from '@tt/data-access';
 import { LayoutComponent } from '@tt/layout';
-import { ProfilePageComponent, SearchPageComponent, SettingsPageComponent } from '@tt/profile';
+import { postFeature, PostsEffects } from '@tt/posts';
+import {
+  ProfileEffects,
+  profileFeature,
+  ProfilePageComponent,
+  SearchPageComponent,
+  SettingsPageComponent,
+} from '@tt/profile';
 import { FormsExperimentComponent } from './experimental/forms-experiment/forms-experiment.component';
 
 export const routes: Routes = [
@@ -14,7 +20,11 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       { path: '', redirectTo: 'profile/me', pathMatch: 'full' },
-      { path: 'profile/:id', component: ProfilePageComponent },
+      {
+        path: 'profile/:id',
+        component: ProfilePageComponent,
+        providers: [provideState(postFeature), provideEffects(PostsEffects)],
+      },
       { path: 'settings', component: SettingsPageComponent },
       {
         path: 'search',
