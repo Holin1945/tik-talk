@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, Signal } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AvatarCircleComponent, SvgIconComponent, TimeAgoPipe } from '@tt/common-ui';
-import { GlobalStoreService, Post, PostComment } from '@tt/data-access';
+import { GlobalStoreService, Post } from '@tt/data-access';
 import { postsActions } from '../../data';
 import { PostInputComponent } from '../../ui';
 import { CommentComponent } from '../../ui/comment/comment.component';
@@ -20,19 +20,20 @@ import { CommentComponent } from '../../ui/comment/comment.component';
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
 })
-export class PostComponent implements OnInit {
+export class PostComponent {
   post = input<Post>();
   profile = inject(GlobalStoreService).me;
   store = inject(Store);
-  // comments!: Signal<PostComment[]>;
 
-  ngOnInit() {
-    const post = this.post();
-    if (!post) return;
-    // this.comments = this.store.selectSignal(selectCommentsByPostId(post.id));
-    // this.store.dispatch(postsActions.fetchPosts({}));
-    this.store.dispatch(postsActions.fetchComments({ postId: post.id }));
-  }
+
+  // этот хук не пригодился, а даже портил всё, точнее то что внутри
+  // ngOnInit() {
+  //   const post = this.post();
+  //   if (!post) return;
+  //   // this.comments = this.store.selectSignal(selectCommentsByPostId(post.id));
+  //   // this.store.dispatch(postsActions.fetchPosts({}));
+  //   // this.store.dispatch(postsActions.fetchComments({ postId: post.id }));
+  // }
 
   onCreated(commentText: string) {
     if (!commentText) return;

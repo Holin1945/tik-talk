@@ -4,7 +4,7 @@ import { Profile } from '@tt/data-access';
 export const profileActions = createActionGroup({
   source: 'profile',
   events: {
-    'filter events': props<{ filters: Record<string, any> }>(),
+    'filter events': props<{ filters: Record<string, unknown> }>(),
     'profiles loaded': props<{ profiles: Profile[] }>(),
   },
 });

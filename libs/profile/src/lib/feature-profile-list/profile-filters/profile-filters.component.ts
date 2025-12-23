@@ -1,9 +1,9 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { profileActions } from '../../data/store';
-import { debounceTime, startWith, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, startWith } from 'rxjs';
+import { profileActions, profileFeature } from '../../data/store';
 
 @Component({
   selector: 'app-profile-filters',
@@ -11,11 +11,9 @@ import { debounceTime, startWith, Subscription } from 'rxjs';
   templateUrl: './profile-filters.component.html',
   styleUrl: './profile-filters.component.scss',
 })
-export class ProfileFiltersComponent implements OnInit, OnDestroy {
+export class ProfileFiltersComponent{
   fb = inject(FormBuilder);
   store = inject(Store);
-
-  searchFormSub!: Subscription;
 
   searchForm = this.fb.group({
     firstName: [''],
@@ -23,22 +21,24 @@ export class ProfileFiltersComponent implements OnInit, OnDestroy {
     stack: [''],
   });
 
-  constructor() {
-    this.searchForm.valueChanges.pipe(startWith({}), debounceTime(300)).subscribe((formValue) => {
-      localStorage.setItem('profileFilters', JSON.stringify(formValue));
-      this.store.dispatch(profileActions.filterEvents({ filters: formValue }));
-    });
-    takeUntilDestroyed();
-  }
-
-  ngOnInit() {
-    const savedFilters = localStorage.getItem('profileFilters');
-    if (savedFilters) {
-      this.searchForm.setValue(JSON.parse(savedFilters));
-    }
-  }
-
-  ngOnDestroy() {
-    this.searchFormSub.unsubscribe();
+   constructor() {
+    this.store
+      .select(profileFeature.selectProfileFilters)
+      .pipe(takeUntilDestroyed())
+      .subscribe((filters) => {
+        if (filters) {
+          this.searchForm.patchValue(filters, { emitEvent: false });
+        }
+      });
+    this.searchForm.valueChanges
+      .pipe(
+        startWith(this.searchForm.value),
+        debounceTime(500),
+        distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
+        takeUntilDestroyed()
+      )
+      .subscribe((formValue) => {
+        this.store.dispatch(profileActions.filterEvents({ filters: formValue }));
+      });
   }
 }

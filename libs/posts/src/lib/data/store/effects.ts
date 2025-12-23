@@ -19,7 +19,7 @@ export class PostsEffects {
       switchMap(() =>
         this.postService.fetchPosts().pipe(map((posts) => postsActions.postsLoaded({ posts })))
       )
-    );
+    )
   });
 
   createPost$ = createEffect(() => {
@@ -37,16 +37,17 @@ export class PostsEffects {
     );
   });
 
-  loadComments$ = createEffect(() => {
-    return this.actions$.pipe(
-      ofType(postsActions.fetchComments),
-      switchMap(({ postId }) =>
-        this.postService
-          .getCommentsByPostId(postId)
-          .pipe(map((comments) => postsActions.commentsLoaded({ comments })))
-      )
-    );
-  });
+  // Можно по сути обойтись без этого эффекта, коменты и так загружаются, но оставил пока это тут
+  // loadComments$ = createEffect(() => {
+  //   return this.actions$.pipe(
+  //     ofType(postsActions.fetchComments),
+  //     switchMap(({ postId }) =>
+  //       this.postService
+  //         .getCommentsByPostId(postId)
+  //         .pipe(map((comments) => postsActions.commentsLoaded({ comments })))
+  //     )
+  //   );
+  // });
 
   createComments$ = createEffect(() => {
     return this.actions$.pipe(
