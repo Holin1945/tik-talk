@@ -9,7 +9,9 @@ import { ProfileService } from './services/profile.service';
 
 export * from './interfaces/chats.interface';
 export * from './interfaces/post.interface';
-// export * from './store';
+export * from './interfaces/chat-ws-service.interface';
+export * from './interfaces/chat-ws-message.interface';
+export * from './interfaces/type-guards';
+
 export { AuthService, ChatsService, GlobalStoreService, PostService, ProfileService };
 export type { Pageble, Profile, TokenResponse };
-

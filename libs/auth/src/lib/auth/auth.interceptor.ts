@@ -45,9 +45,7 @@ const refreshAndProcced = (
     return authService.refreshAuthToken().pipe(
       switchMap((res) => {
         return next(addToken(req, res.access_token)).pipe(
-          tap(() => {
-            isRefreshing$.next(false);
-          })
+          tap(() => isRefreshing$.next(false))
         );
       })
     );
@@ -57,7 +55,7 @@ const refreshAndProcced = (
 
   return isRefreshing$.pipe(
     filter((isRefreshing) => !isRefreshing),
-    switchMap((res) => {
+    switchMap(() => {
       return next(addToken(req, authService.token!));
     })
   );

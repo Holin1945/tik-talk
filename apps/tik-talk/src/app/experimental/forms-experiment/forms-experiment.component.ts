@@ -1,6 +1,6 @@
 import { NameValidator } from './name.validator';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -74,8 +74,7 @@ function validateDateRange({
 })
 export class FormsExperimentComponent {
   readonly phoneMask = phoneMask;
-  // readonly dateMask = dateMask;
-
+  // readonly dateMask = dateMask; 
   sort = () => 0;
 
   ReceiverType = ReceiverType;

@@ -1,19 +1,71 @@
+import { TokenResponse } from './../interfaces/auth.interface';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { map, switchMap, timer } from 'rxjs';
-import { Message, Chat, LastMessageRes } from '../interfaces/chats.interface';
+import { map, Observable } from 'rxjs';
+import { ChatWSMessage } from '../interfaces/chat-ws-message.interface';
+import { ChatWsService } from '../interfaces/chat-ws-service.interface';
+import { Chat, LastMessageRes, Message } from '../interfaces/chats.interface';
+import { isNewMessage, isUnreadMessage } from '../interfaces/type-guards';
+import { AuthService } from '../services/auth.service';
+import { ChatWsRxjsService } from './chat-ws-rxjs.service';
 import { ProfileService } from './profile.service';
 
 @Injectable({ providedIn: 'root' })
 export class ChatsService {
   httt = inject(HttpClient);
+  #authService = inject(AuthService);
   me = inject(ProfileService).me;
 
+  wsAdapter: ChatWsService = new ChatWsRxjsService();
+
   activeChatMessages = signal<Message[]>([]);
+  unreadMessagesCount = signal(0);
 
   baseApiUrl = 'https://icherniakov.ru/yt-course/';
   chatsUrl = `${this.baseApiUrl}chat/`;
   messageUrl = `${this.baseApiUrl}message/`;
+
+  connectWs() {
+    return this.wsAdapter.connect({
+      url: `${this.baseApiUrl}chat/ws`,
+      token: this.#authService.token ?? '', // Токен может протухнуть, нужно сделать так чтобы он обновлялся
+      handleMessage: this.handleWSMessage,
+    }) as Observable<ChatWSMessage>;
+  }
+
+  #refreshToken() {
+    this.#authService.refreshAuthToken().subscribe((TokenResponse: TokenResponse) => {
+      console.log('Обновление токена', TokenResponse.access_token);
+
+      this.wsAdapter.disconnect();
+      this.connectWs();
+    });
+  }
+
+  handleWSMessage = (message: ChatWSMessage) => {
+    if (!('action' in message)) return;
+
+    // Объявил тут, так как буду использовать его и в чатах и в сайдбаре
+    if (isUnreadMessage(message)) {
+      this.unreadMessagesCount.set(message.data.count);
+      console.log('Количество непрочитанных сообщений равно:', this.unreadMessagesCount());
+    }
+
+    if (isNewMessage(message)) {
+      this.activeChatMessages.set([
+        ...this.activeChatMessages(),
+        {
+          id: message.data.id,
+          userFromId: message.data.author,
+          personalChatId: message.data.chat_id,
+          text: message.data.message,
+          createdAt: message.data.created_at,
+          isRead: false,
+          isMine: false,
+        },
+      ]);
+    }
+  };
 
   createChat(userId: number) {
     return this.httt.post<Chat>(`${this.chatsUrl}${userId}`, {});
@@ -29,7 +81,6 @@ export class ChatsService {
         const patchedMessages = chat.messages.map((message) => {
           return {
             ...message,
-
             user: chat.userFirst.id === message.userFromId ? chat.userFirst : chat.userSecond,
             isMine: message.userFromId === this.me()!.id,
           };
@@ -45,7 +96,7 @@ export class ChatsService {
     );
   }
 
-  sendMessage<Message>(chatId: number, message: string) {
+  sendMessage(chatId: number, message: string) {
     return this.httt.post(
       `${this.messageUrl}send/${chatId}`,
       {},
@@ -54,12 +105,6 @@ export class ChatsService {
           message,
         },
       }
-    );
-  }
-
-  unreadChats(intervalMs = 1115000) {
-    return timer(0, intervalMs).pipe(
-      switchMap(() => this.httt.get<LastMessageRes[]>(`${this.chatsUrl}get_my_chats/`))
     );
   }
 }

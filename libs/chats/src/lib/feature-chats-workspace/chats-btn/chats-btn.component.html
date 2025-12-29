@@ -9,7 +9,9 @@
   </div>
   <div class="messages-and-count">
     <div class="medium-text">{{ textWrap(chat.message ?? '...', 30) }}</div>
+    @if(chat.unreadMessages) {
     <div class="count-messages tt-control-label">{{ chat.unreadMessages }}</div>
+    }
   </div>
 </div>
 }

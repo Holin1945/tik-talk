@@ -1,10 +1,11 @@
 import { AsyncPipe, NgForOf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { ImgUrlPipe, SvgIconComponent } from '@tt/common-ui';
+import { AuthService, ChatsService, ProfileService } from '@tt/data-access';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { SubscriberCardComponent } from './subscriber-card/subscriber-card.component';
-import { SvgIconComponent, ImgUrlPipe } from '@tt/common-ui';
-import { ProfileService } from '@tt/data-access';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,8 +24,15 @@ import { ProfileService } from '@tt/data-access';
 })
 export class SidebarComponent implements OnInit {
   profileService = inject(ProfileService);
+  chatsServiсe = inject(ChatsService);
+  destroyRef = inject(DestroyRef);
+  authService = inject(AuthService);
+
   subscribers$ = this.profileService.getSubscribersShortList();
+
   me = this.profileService.me;
+  unreadMessagesCount = this.chatsServiсe.unreadMessagesCount;
+  wsSubcribe!: Subscription;
 
   menuItems = [
     {
@@ -44,7 +52,25 @@ export class SidebarComponent implements OnInit {
     },
   ];
 
+ async reconnect() {
+   await firstValueFrom(this.authService.refreshAuthToken());
+    this.connectWs();
+  }
+
+  connectWs() {
+    this.wsSubcribe?.unsubscribe();
+    this.wsSubcribe = this.chatsServiсe
+      .connectWs()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((message) => {
+        if (message) {
+          this.reconnect();
+        }
+      });
+  }
+
   ngOnInit(): void {
     firstValueFrom(this.profileService.getMe());
+    this.connectWs();
   }
 }

@@ -108,3 +108,12 @@ img {
     color: var(--primary-color);
   }
 }
+
+.count-messages {
+  width: 26px;
+  height: 18px;
+  background: var(--primary-color);
+  place-content: center;
+  text-align: center;
+  color: var(--dark-color);
+}

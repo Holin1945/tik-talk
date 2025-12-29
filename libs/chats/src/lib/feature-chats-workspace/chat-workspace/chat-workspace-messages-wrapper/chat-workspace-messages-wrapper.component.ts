@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, input, ViewChild } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { ChatWorkspaceMessageComponent } from './chat-workspace-message/chat-workspace-message.component';
+import { Chat, ChatsService, Message } from '@tt/data-access';
 import { MessageInputComponent } from '../../../ui';
-import { ChatsService, Chat, Message } from '@tt/data-access';
+import { ChatWorkspaceMessageComponent } from './chat-workspace-message/chat-workspace-message.component';
 
 @Component({
   selector: 'app-chat-workspace-messages-wrapper',
@@ -13,7 +12,6 @@ import { ChatsService, Chat, Message } from '@tt/data-access';
 })
 export class ChatWorkspaceMessagesWrapperComponent {
   chatsService = inject(ChatsService);
-
   chat = input.required<Chat>();
   messages = this.chatsService.activeChatMessages;
 
@@ -23,12 +21,13 @@ export class ChatWorkspaceMessagesWrapperComponent {
     setTimeout(() => {
       this.scrollContainer.nativeElement.scrollTop =
         this.scrollContainer.nativeElement.scrollHeight;
-    }, 500);
+    }, 1200);
   }
 
   async onSendMessage(messageText: string) {
-    await firstValueFrom(this.chatsService.sendMessage(this.chat().id, messageText));
-    await firstValueFrom(this.chatsService.getChatById(this.chat().id));
+    this.chatsService.wsAdapter.sendMessage(messageText, this.chat().id);
+    // await firstValueFrom(this.chatsService.sendMessage(this.chat().id, messageText));
+    // await firstValueFrom(this.chatsService.getChatById(this.chat().id));
   }
 
   getGroupedMessages(): { label: string; messages: Message[] }[] {
