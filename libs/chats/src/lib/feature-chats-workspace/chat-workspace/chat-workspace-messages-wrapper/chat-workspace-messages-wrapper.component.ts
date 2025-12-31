@@ -24,7 +24,7 @@ export class ChatWorkspaceMessagesWrapperComponent {
     }, 1200);
   }
 
-  async onSendMessage(messageText: string) {
+   onSendMessage(messageText: string) {
     this.chatsService.wsAdapter.sendMessage(messageText, this.chat().id);
     // await firstValueFrom(this.chatsService.sendMessage(this.chat().id, messageText));
     // await firstValueFrom(this.chatsService.getChatById(this.chat().id));

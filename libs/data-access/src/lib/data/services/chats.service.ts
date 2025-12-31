@@ -28,24 +28,23 @@ export class ChatsService {
   connectWs() {
     return this.wsAdapter.connect({
       url: `${this.baseApiUrl}chat/ws`,
-      token: this.#authService.token ?? '', // Токен может протухнуть, нужно сделать так чтобы он обновлялся
+      token: this.#authService.token ?? '', 
       handleMessage: this.handleWSMessage,
     }) as Observable<ChatWSMessage>;
   }
 
-  #refreshToken() {
-    this.#authService.refreshAuthToken().subscribe((TokenResponse: TokenResponse) => {
-      console.log('Обновление токена', TokenResponse.access_token);
+  // #refreshToken() {
+  //   this.#authService.refreshAuthToken().subscribe((TokenResponse: TokenResponse) => {
+  //     console.log('Обновление токена', TokenResponse.access_token);
 
-      this.wsAdapter.disconnect();
-      this.connectWs();
-    });
-  }
+  //     this.wsAdapter.disconnect();
+  //     this.connectWs();
+  //   });
+  // }
 
   handleWSMessage = (message: ChatWSMessage) => {
     if (!('action' in message)) return;
 
-    // Объявил тут, так как буду использовать его и в чатах и в сайдбаре
     if (isUnreadMessage(message)) {
       this.unreadMessagesCount.set(message.data.count);
       console.log('Количество непрочитанных сообщений равно:', this.unreadMessagesCount());
