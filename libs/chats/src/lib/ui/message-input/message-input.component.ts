@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   inject,
@@ -15,6 +16,7 @@ import { ProfileService } from '@tt/data-access';
   imports: [AvatarCircleComponent, SvgIconComponent, FormsModule, CommonModule],
   templateUrl: './message-input.component.html',
   styleUrl: './message-input.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MessageInputComponent {
   r2 = inject(Renderer2);

@@ -1,4 +1,4 @@
-import { Component, effect, inject, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLinkWithHref } from '@angular/router';
 import { ProfileService } from '@tt/data-access';
@@ -11,6 +11,7 @@ import { ProfileHeaderComponent } from '../../ui/profile-header/profile-header.c
   imports: [ProfileHeaderComponent, ReactiveFormsModule, RouterLinkWithHref, AvatarUploadComponent],
   templateUrl: './settings-page.component.html',
   styleUrl: './settings-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsPageComponent {
   fb = inject(FormBuilder);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, inject, input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, input, ViewChild } from '@angular/core';
 import { Chat, ChatsService, Message } from '@tt/data-access';
 import { MessageInputComponent } from '../../../ui';
 import { ChatWorkspaceMessageComponent } from './chat-workspace-message/chat-workspace-message.component';
@@ -9,6 +9,7 @@ import { ChatWorkspaceMessageComponent } from './chat-workspace-message/chat-wor
   imports: [ChatWorkspaceMessageComponent, MessageInputComponent, CommonModule],
   templateUrl: './chat-workspace-messages-wrapper.component.html',
   styleUrl: './chat-workspace-messages-wrapper.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatWorkspaceMessagesWrapperComponent {
   chatsService = inject(ChatsService);

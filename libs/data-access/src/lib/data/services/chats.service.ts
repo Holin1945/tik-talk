@@ -1,4 +1,3 @@
-import { TokenResponse } from './../interfaces/auth.interface';
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable } from 'rxjs';
@@ -19,6 +18,7 @@ export class ChatsService {
   wsAdapter: ChatWsService = new ChatWsRxjsService();
 
   activeChatMessages = signal<Message[]>([]);
+  activeChat = signal<Chat | null>(null);
   unreadMessagesCount = signal(0);
 
   baseApiUrl = 'https://icherniakov.ru/yt-course/';
@@ -28,7 +28,7 @@ export class ChatsService {
   connectWs() {
     return this.wsAdapter.connect({
       url: `${this.baseApiUrl}chat/ws`,
-      token: this.#authService.token ?? '', 
+      token: this.#authService.token ?? '',
       handleMessage: this.handleWSMessage,
     }) as Observable<ChatWSMessage>;
   }
@@ -51,6 +51,10 @@ export class ChatsService {
     }
 
     if (isNewMessage(message)) {
+      const me = this.me();
+      const activeChat = this.activeChat();
+      if (!me || !activeChat) return;
+
       this.activeChatMessages.set([
         ...this.activeChatMessages(),
         {
@@ -60,7 +64,11 @@ export class ChatsService {
           text: message.data.message,
           createdAt: message.data.created_at,
           isRead: false,
-          isMine: false,
+          isMine: message.data.author === me.id,
+          user:
+            this.activeChat()?.userFirst.id === message.data.author
+              ? activeChat.userFirst
+              : activeChat.userSecond,
         },
       ]);
     }
@@ -77,6 +85,7 @@ export class ChatsService {
   getChatById(chatId: number) {
     return this.httt.get<Chat>(`${this.chatsUrl}${chatId}`).pipe(
       map((chat) => {
+        this.activeChat.set(chat);
         const patchedMessages = chat.messages.map((message) => {
           return {
             ...message,

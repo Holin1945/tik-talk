@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   HostBinding,
@@ -17,6 +18,7 @@ import { GlobalStoreService } from '@tt/data-access';
   imports: [AvatarCircleComponent, SvgIconComponent, FormsModule, CommonModule],
   templateUrl: './post-input.component.html',
   styleUrl: './post-input.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostInputComponent {
   r2 = inject(Renderer2); 

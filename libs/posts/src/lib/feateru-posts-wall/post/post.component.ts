@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AvatarCircleComponent, SvgIconComponent, TimeAgoPipe } from '@tt/common-ui';
 import { GlobalStoreService, Post } from '@tt/data-access';
@@ -19,6 +19,7 @@ import { CommentComponent } from '../../ui/comment/comment.component';
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PostComponent {
   post = input<Post>();

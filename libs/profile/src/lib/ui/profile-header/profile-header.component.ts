@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
 import { Router } from '@angular/router';
 import { AvatarCircleComponent } from '@tt/common-ui';
 import { Profile, ProfileService } from '@tt/data-access';
@@ -8,6 +8,7 @@ import { Profile, ProfileService } from '@tt/data-access';
   imports: [AvatarCircleComponent],
   templateUrl: './profile-header.component.html',
   styleUrl: './profile-header.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileHeaderComponent {
   profile = input<Profile | null>();
