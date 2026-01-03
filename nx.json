@@ -37,12 +37,12 @@
       "linter": "eslint",
       "unitTestRunner": "none",
       "prefix": "tt",
-      "style": "scss" 
+      "style": "scss"
     },
     "@nx/angular:component": {
       "style": "scss",
       "type": "component",
-      "skeepTests": true,
+      "skipTests": true,
       "changeDetection": "OnPush"
     }
   }

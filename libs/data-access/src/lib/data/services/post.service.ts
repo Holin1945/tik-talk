@@ -8,7 +8,7 @@ import { CommentCreateDto, Post, PostComment, PostCreateDto } from '../interface
 })
 export class PostService {
   #http = inject(HttpClient);
-  baseApiUrl = 'https://icherniakov.ru/yt-course/';
+  baseApiUrl = '/yt-course/';
   posts = signal<Post[]>([]);
 
   createPost(payload: PostCreateDto) {

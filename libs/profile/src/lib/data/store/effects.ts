@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { ProfileService } from '@tt/data-access';
-import { switchMap } from 'rxjs';
+import { map, switchMap, withLatestFrom } from 'rxjs';
+import { selectProfileFilters, selectProfilePageable } from '../store/selectors';
 import { profileActions } from './actions';
 
 @Injectable({
@@ -10,19 +12,22 @@ import { profileActions } from './actions';
 export class ProfileEffects {
   profileService = inject(ProfileService);
   actions$ = inject(Actions);
+  store = inject(Store);
 
   filterProfiles = createEffect(() => {
     return this.actions$.pipe(
-      ofType(profileActions.filterEvents),
-      switchMap(({ filters }) => {
-        return this.profileService
-          .filterProfiles(filters)
-          .pipe(
-            switchMap((el) => [
-              profileActions.profilesLoaded({ profiles: el.items }),
-            ])
-          );
-      })
+      ofType(profileActions.filterEvents, profileActions.setPage),
+      withLatestFrom(
+        this.store.select(selectProfileFilters),
+        this.store.select(selectProfilePageable)
+      ),
+      switchMap(([_, filters, pageable]) => {
+        return this.profileService.filterProfiles({
+          ...pageable,
+          ...filters,
+        });
+      }),
+      map(res => profileActions.profilesLoaded({profiles: res.items}))
     );
   });
 }
