@@ -4,22 +4,26 @@ import { Feature } from './mock.interface';
 
 @Injectable({ providedIn: 'root' })
 export class MockService {
-  getAddresses() {
-    return of([
-      // {
-      //   'city': 'Москва',
-      //   'street': 'Тверская',
-      //   'building': 14,
-      //   'apartment': 32
-      // },
-      // {
-      //   'city': 'Санкт-Петербург',
-      //   'street': 'Ленина',
-      //   'building': 100,
-      //   'apartment': 30
-      // }
-    ]);
-  }
+  // #apiUrl = 'https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address';
+  // #http = inject(HttpClient);
+
+  // getAddresses(query: string) {
+  //   return this.#http
+  //     .post<{ suggestions: DadataSuggestion[] }>(
+  //       this.#apiUrl,
+  //       { query },
+  //       {
+  //         headers: {
+  //           Authorization: `Token ${DADATA_TOKEN}`,
+  //         },
+  //       }
+  //     )
+  //     .pipe(
+  //       map((res) => {
+  //         return res.suggestions;
+  //       })
+  //     );
+  // }
 
   getData(val: string) {
     return of(`Data from backend: ${val}`);
@@ -42,6 +46,23 @@ export class MockService {
         label: 'Ускоренная доставка',
         value: false,
       },
+    ]);
+  }
+
+  getAddresses() {
+    return of([
+      // {
+      //   'city': 'Москва',
+      //   'street': 'Тверская',
+      //   'building': 14,
+      //   'apartment': 32
+      // },
+      // {
+      //   'city': 'Санкт-Петербург',
+      //   'street': 'Ленина',
+      //   'building': 100,
+      //   'apartment': 30
+      // }
     ]);
   }
 }

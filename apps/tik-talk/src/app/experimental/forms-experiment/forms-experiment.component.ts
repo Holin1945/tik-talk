@@ -1,6 +1,5 @@
-import { NameValidator } from './name.validator';
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, output } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
@@ -17,6 +16,7 @@ import { MaskitoDirective } from '@maskito/angular';
 import { phoneMask } from './mask';
 import { Address, Feature } from './mock.interface';
 import { MockService } from './mock.service';
+import { NameValidator } from './name.validator';
 
 enum ReceiverType {
   PERSON = 'PERSON',
@@ -115,7 +115,6 @@ export class FormsExperimentComponent {
           this.form.controls.addresses.push(getAddressForm(addr));
         }
         this.form.controls.addresses.setControl(1, getAddressForm(addrs[0]));
-        // console.log(this.form.controls.addresses.at(0))
       });
 
     this.mockService

@@ -35,4 +35,12 @@ export class LoginPageComponent {
       });
     }
   }
+
+  // ngOnInit(): void {
+  //   this.form.valueChanges.subscribe((val) => {
+  //     console.log(val);
+  //   });
+
+  //   this.form.controls.username.disable();
+  // }
 }

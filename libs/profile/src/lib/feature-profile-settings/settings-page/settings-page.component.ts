@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLinkWithHref } from '@angular/router';
+import { AddressInputComponent, StackInputComponent } from '@tt/common-ui';
 import { ProfileService } from '@tt/data-access';
 import { firstValueFrom } from 'rxjs';
 import { AvatarUploadComponent } from '../../ui/avatar-upload/avatar-upload.component';
@@ -8,7 +9,14 @@ import { ProfileHeaderComponent } from '../../ui/profile-header/profile-header.c
 
 @Component({
   selector: 'app-settings-page',
-  imports: [ProfileHeaderComponent, ReactiveFormsModule, RouterLinkWithHref, AvatarUploadComponent],
+  imports: [
+    ProfileHeaderComponent,
+    ReactiveFormsModule,
+    RouterLinkWithHref,
+    AvatarUploadComponent,
+    StackInputComponent,
+    AddressInputComponent,
+  ],
   templateUrl: './settings-page.component.html',
   styleUrl: './settings-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,13 +34,14 @@ export class SettingsPageComponent {
     username: [{ value: '', disabled: true }, Validators.required],
     description: [''],
     stack: [''],
+    city: [null]
   });
 
   constructor() {
     effect(() => {
+      //@ts-ignore
       this.form.patchValue({
         ...this.profileService.me(),
-        stack: this.mergeStack(this.profileService.me()?.stack),
       });
     });
   }
@@ -51,22 +60,7 @@ export class SettingsPageComponent {
       //@ts-ignore
       this.profileService.patchProfile({
         ...this.form.value,
-        stack: this.splitStack(this.form.value.stack),
       })
     );
-  }
-
-  splitStack(stack: string | null | string[] | undefined): string[] {
-    if (!stack) return [];
-    if (Array.isArray(stack)) return stack;
-
-    return stack.split(',');
-  }
-
-  mergeStack(stack: string | null | string[] | undefined): string {
-    if (!stack) return '';
-    if (Array.isArray(stack)) return stack.join(',');
-
-    return stack;
   }
 }

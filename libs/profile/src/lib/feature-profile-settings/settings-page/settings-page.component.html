@@ -24,15 +24,14 @@
       <textarea formControlName="description" class="tt-form-input tt-textarea" rows="4"></textarea>
     </label>
 
-    <label class="tt-form-label">
+    <label for class="tt-form-label">
       <span class="tt-form-label__text">Аватар</span>
       <app-avatar-upload></app-avatar-upload>
     </label>
+    
+    <tt-stack-input formControlName="stack"></tt-stack-input>
+    <tt-address-input formControlName="city"></tt-address-input>
 
-    <label class="tt-form-label">
-      <span class="tt-form-label__text">Навыки (стэк)</span>
-      <input type="text" class="tt-form-input" formControlName="stack" />
-    </label>
     <button type="button" class="additional-services" [routerLink]="['/experiment']">
       Заказать услугу
     </button>

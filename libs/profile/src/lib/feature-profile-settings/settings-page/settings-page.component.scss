@@ -6,6 +6,13 @@
   width: 1140px;
 }
 
+@media (max-width: 900px) {
+  :host {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 .profile-form__wrapper {
   display: flex;
   flex-direction: column;
@@ -16,6 +23,15 @@
   height: calc(100dvh - (24px * 4));
   max-width: 664px;
   height: 852px;
+  overflow-y: auto;
+}
+
+.profile-form__wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.profile-form__wrapper::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
 }
 
 .profile-form {
@@ -35,4 +51,5 @@
   height: 30px;
   border: none;
   border-radius: 5px;
+  margin: 10px 0;
 }

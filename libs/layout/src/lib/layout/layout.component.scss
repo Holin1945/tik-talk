@@ -4,8 +4,17 @@
   height: 100dvh;
 }
 
+@media (max-width: 900px) {
+  :host {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    height: 900px;
+  }
+}
+
 .workspace {
   padding: 24px;
   max-width: 1140px;
   height: 900px;
 }
+
