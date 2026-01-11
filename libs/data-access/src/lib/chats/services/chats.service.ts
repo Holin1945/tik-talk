@@ -3,11 +3,11 @@ import { inject, Injectable, signal } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { ChatWSMessage } from '../interfaces/chat-ws-message.interface';
 import { ChatWsService } from '../interfaces/chat-ws-service.interface';
-import { Chat, LastMessageRes, Message } from '../interfaces/chats.interface';
-import { isNewMessage, isUnreadMessage } from '../interfaces/type-guards';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../data/services/auth.service';
 import { ChatWsRxjsService } from './chat-ws-rxjs.service';
-import { ProfileService } from './profile.service';
+import { ProfileService } from '../../profile/services/profile.service';
+import { Message, Chat, LastMessageRes } from '../../chats/interfaces/chats.interface';
+import { isNewMessage, isUnreadMessage } from '../../data/interfaces/type-guards';
 
 @Injectable({ providedIn: 'root' })
 export class ChatsService {
@@ -47,7 +47,6 @@ export class ChatsService {
 
     if (isUnreadMessage(message)) {
       this.unreadMessagesCount.set(message.data.count);
-      console.log('Количество непрочитанных сообщений равно:', this.unreadMessagesCount());
     }
 
     if (isNewMessage(message)) {
